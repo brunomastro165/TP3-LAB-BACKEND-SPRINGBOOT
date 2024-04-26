@@ -32,5 +32,28 @@ public class InstrumentoServiceImpl implements IInstrumentoService{
         return instrumentos;
     }
 
+    @Override
+    public Instrumento actualizar(Instrumento entity) {
+        var optionalEntity = instrumentoRepository.findById(entity.getId());
+        if (optionalEntity.isEmpty()){
+            throw new RuntimeException("No se encontro una entidad con el id " + entity.getId());
+        }
+        var newEntity = instrumentoRepository.save(entity);
+        return newEntity;
+    }
+
+    @Override
+    public Instrumento eliminar(Instrumento entity) {
+        var optionalEntity = instrumentoRepository.findById(entity.getId());
+        if (optionalEntity.isEmpty()){
+            throw new RuntimeException("No se encontro una entidad con el id " + entity.getId());
+        }
+        var finalEntity = optionalEntity.get();
+        finalEntity.setActivo(false);
+        System.out.println(finalEntity.getActivo());
+        var newEntity = instrumentoRepository.save(finalEntity);
+        return newEntity;
+    }
+
 
 }

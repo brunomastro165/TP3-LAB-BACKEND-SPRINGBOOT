@@ -11,4 +11,8 @@ public interface IInstrumentoService {
     Instrumento getById(Long id);
 
     List<Instrumento> getAll();
+
+    Instrumento actualizar(Instrumento instrumento);
+
+    Instrumento eliminar(Instrumento instrumento);
 }

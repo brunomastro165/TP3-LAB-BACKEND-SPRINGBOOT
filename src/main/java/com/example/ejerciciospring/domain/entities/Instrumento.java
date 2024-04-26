@@ -1,6 +1,7 @@
 package com.example.ejerciciospring.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Instrumento {
 
     private String modelo;
 
+    @Column(name = "imagen",length = 1024)
     private String imagen;
 
     private String precio;
@@ -33,6 +35,12 @@ public class Instrumento {
 
     private String cantidadVendida;
 
+    private Boolean activo;
+
     @Column(name = "descripcion",length = 1024)
     private String descripcion;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "categoriaId")
+    private Categoria categoria;
 }
