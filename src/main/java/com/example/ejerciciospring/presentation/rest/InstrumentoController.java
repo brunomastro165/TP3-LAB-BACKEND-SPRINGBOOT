@@ -2,6 +2,7 @@ package com.example.ejerciciospring.presentation.rest;
 
 import com.example.ejerciciospring.business.services.IInstrumentoService;
 import com.example.ejerciciospring.domain.entities.Instrumento;
+import com.example.ejerciciospring.domain.entities.Pedido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -64,6 +65,14 @@ public class InstrumentoController {
             throw new RuntimeException(e);
 
         }
+    }
+
+    @PostMapping("/api/create_preference_mp")
+    public PreferenceMP creaarPreferenciaMercadoPago(@RequestBody Pedido pedido){
+        System.out.println("Hola");
+        MercadoPagoController cMercadoPago = new MercadoPagoController();
+        PreferenceMP preference = cMercadoPago.getPreferenciaIdMercadoPago(pedido);
+        return preference;
     }
 
 }

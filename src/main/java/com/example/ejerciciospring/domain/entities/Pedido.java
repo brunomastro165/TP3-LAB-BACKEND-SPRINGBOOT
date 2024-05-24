@@ -21,6 +21,8 @@ public class Pedido {
 
     private Double total;
 
+    private String titulo;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "pedido_id")
     private List<DetallePedido> detallesPedido;
