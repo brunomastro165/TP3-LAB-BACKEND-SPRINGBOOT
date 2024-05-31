@@ -51,7 +51,7 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     //MP
-    implementation 'com.mercadopago:sdk-java:2.1.24'
+    implementation group: 'com.mercadopago', name: 'sdk-java', version: '2.1.24'
     //implementation 'com.mercadopago:java-sdk:2.1.7'
 
     implementation 'org.bouncycastle:bcprov-jdk15on:1.68'

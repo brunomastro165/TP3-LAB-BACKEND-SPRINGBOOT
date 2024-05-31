@@ -17,8 +17,28 @@ public class PedidoServiceImpl implements IPedidoService{
     @Autowired
     PedidoRepository pedidoRepository;
 
+    @Autowired
+    IInstrumentoService instrumentoService;
+
     @Override
-    public Pedido crear(Pedido pedido) {return  pedidoRepository.save(pedido);}
+    public Pedido crear(Pedido pedido) {
+        pedido.getDetallesPedido().forEach(detallePedido -> {
+            Instrumento instrumento = detallePedido.getInstrumento();
+            System.out.println(instrumento.getInstrumento());
+
+            // Obtén la cantidad vendida actual del instrumento
+            String cantidadVendidaActual = instrumento.getCantidadVendida();
+
+            // Actualiza la cantidad vendida con la cantidad del detalle del pedido
+            int nuevaCantidadVendida = Integer.parseInt(cantidadVendidaActual) + detallePedido.getCantidad();
+            instrumento.setCantidadVendida(String.valueOf(nuevaCantidadVendida));
+
+            // Actualiza el instrumento en la base de datos
+            instrumentoService.actualizar(instrumento);
+        });
+
+        return pedidoRepository.save(pedido);
+    }
 
 
     @Override

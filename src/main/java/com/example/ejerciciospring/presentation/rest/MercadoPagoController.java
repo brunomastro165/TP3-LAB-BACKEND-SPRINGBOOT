@@ -2,10 +2,7 @@ package com.example.ejerciciospring.presentation.rest;
 
 import com.example.ejerciciospring.domain.entities.Pedido;
 import com.mercadopago.MercadoPagoConfig;
-import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
-import com.mercadopago.client.preference.PreferenceClient;
-import com.mercadopago.client.preference.PreferenceItemRequest;
-import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.client.preference.*;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
@@ -15,18 +12,18 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
 public class MercadoPagoController {
 
-    public PreferenceMP getPreferenciaIdMercadoPago(Pedido pedido) {
-
+    public PreferenceMP getPreferenciaIdMercadoPago(Pedido pedido){
         try {
-            MercadoPagoConfig.setAccessToken("TEST-4895649229987631-052014-eda3a2f76d136e7a7537103b89a01927-713959562");
+            MercadoPagoConfig.setAccessToken("TEST-6157612059305301-053022-bfed9d852d8d432e27e78ec616080ea1-713959562");
+
+
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
-                    .id(pedido.getId().toString())
+                    .id("1234")
                     .title(pedido.getTitulo())
-                    .description("Pedido realizado desde el carrito de compra")
-                    .pictureUrl("https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/4e4293857c03d819e4ae51de1e86d66a.jpg")
+                    .description("Pedido realizado desde el carrito de compras")
+                    .pictureUrl("https://img-global.cpcdn.com/recipes/0709fbb52d87d2d7/1200x630cq70/photo.jpg")
                     .quantity(1)
                     .currencyId("ARG")
                     .unitPrice(new BigDecimal(pedido.getTotal()))
@@ -34,7 +31,7 @@ public class MercadoPagoController {
             List<PreferenceItemRequest> items = new ArrayList<>();
             items.add(itemRequest);
 
-            PreferenceBackUrlsRequest backURL = PreferenceBackUrlsRequest.builder().success("http://localhost:5173/pagoRealizado")
+            PreferenceBackUrlsRequest backURL = PreferenceBackUrlsRequest.builder().success("http://localhost:5173/mpsuccess")
                     .pending("http://localhost:5173/mppending").failure("http://localhost:5173/mpfailure").build();
 
             PreferenceRequest preferenceRequest = PreferenceRequest.builder()
@@ -42,22 +39,25 @@ public class MercadoPagoController {
                     .backUrls(backURL)
                     .build();
             PreferenceClient client = new PreferenceClient();
-            System.out.println(client.create(preferenceRequest));
             Preference preference = client.create(preferenceRequest);
 
             PreferenceMP mpPreference = new PreferenceMP();
             mpPreference.setStatusCode(preference.getResponse().getStatusCode());
             mpPreference.setId(preference.getId());
+
+            /*
+            PreferencePayerRequest payer = PreferencePayerRequest.builder()
+                    .email("TESTUSER974379954")  // Email de usuario comprador de prueba
+                    .build();
+            */
+
             return mpPreference;
 
-        } catch (MPApiException e) {
-            // Obtener los detalles del error de la API
-            System.err.println("API Error: " + e.getApiResponse().getContent());
+        } catch (Exception e) {
             e.printStackTrace();
-            return new PreferenceMP(); // Devuelve un objeto vacío para evitar null
-        } catch (MPException e) {
-            e.printStackTrace();
-            return new PreferenceMP(); // Devuelve un objeto vacío para evitar null
+            return null;
         }
+
     }
+
 }

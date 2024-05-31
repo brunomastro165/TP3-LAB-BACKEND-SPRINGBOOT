@@ -64,12 +64,13 @@ public class UsuarioController {
 
     @PostMapping("/create")
     public ResponseEntity<?> crear(@RequestBody Usuario usuario){
-
         var usuarios = usuarioService.getAll();
 
-        for (Usuario u : usuarios) {
-            if (u.getNombreUsuario().equals(usuario.getNombreUsuario())) {
-                return new ResponseEntity<>("Ya existe un usuario con ese nombre", HttpStatus.BAD_REQUEST);
+        if (!usuarios.isEmpty()) {
+            for (Usuario u : usuarios) {
+                if (u.getNombreUsuario().equals(usuario.getNombreUsuario())) {
+                    return new ResponseEntity<>("Ya existe un usuario con ese nombre", HttpStatus.BAD_REQUEST);
+                }
             }
         }
 

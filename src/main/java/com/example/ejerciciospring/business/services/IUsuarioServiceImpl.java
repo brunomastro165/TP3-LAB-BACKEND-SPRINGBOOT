@@ -27,7 +27,6 @@ public class IUsuarioServiceImpl implements IUsuarioService{
     @Override
     public List<Usuario> getAll(){
         List<Usuario> usuarios = usuarioRepository.findAll();
-        if(usuarios.isEmpty()) throw new RuntimeException("No se encontraron usuarios");
         return usuarios;
     }
 
