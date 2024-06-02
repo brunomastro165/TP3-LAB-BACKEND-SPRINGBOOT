@@ -20,7 +20,7 @@ public class MercadoPagoController {
 
 
             PreferenceItemRequest itemRequest = PreferenceItemRequest.builder()
-                    .id("1234")
+                    .id(pedido.getId().toString())
                     .title(pedido.getTitulo())
                     .description("Pedido realizado desde el carrito de compras")
                     .pictureUrl("https://img-global.cpcdn.com/recipes/0709fbb52d87d2d7/1200x630cq70/photo.jpg")
