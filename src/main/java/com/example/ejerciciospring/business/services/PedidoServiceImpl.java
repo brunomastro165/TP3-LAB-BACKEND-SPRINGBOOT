@@ -22,21 +22,24 @@ public class PedidoServiceImpl implements IPedidoService{
 
     @Override
     public Pedido crear(Pedido pedido) {
+
+        //Esto solo sirve para actualizar la cantidad vendida del instrumento, no tiene que ver con el pedido
         pedido.getDetallesPedido().forEach(detallePedido -> {
             Instrumento instrumento = detallePedido.getInstrumento();
             System.out.println(instrumento.getInstrumento());
 
-            // Obtén la cantidad vendida actual del instrumento
+            // Obtener la cantidad vendida actual del instrumento
             String cantidadVendidaActual = instrumento.getCantidadVendida();
 
-            // Actualiza la cantidad vendida con la cantidad del detalle del pedido
+            // Actualizar la cantidad vendida con la cantidad del detalle del pedido
             int nuevaCantidadVendida = Integer.parseInt(cantidadVendidaActual) + detallePedido.getCantidad();
             instrumento.setCantidadVendida(String.valueOf(nuevaCantidadVendida));
 
-            // Actualiza el instrumento en la base de datos
+            // Actualizar el instrumento en la base de datos
             instrumentoService.actualizar(instrumento);
         });
 
+        //Esto es lo único que hace el service de pedido realmente
         return pedidoRepository.save(pedido);
     }
 

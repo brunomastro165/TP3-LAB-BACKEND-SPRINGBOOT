@@ -10,11 +10,16 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
@@ -32,8 +37,8 @@ public class ExcelController {
     IPedidoService pedidoService;
 
     @GetMapping("/export")
-    public ResponseEntity<String> exportToExcel(@RequestParam("fechaInicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
-                                                @RequestParam("fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {
+    public ResponseEntity<Resource> exportToExcel(@RequestParam("fechaInicio") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaInicio,
+                                                  @RequestParam("fechaFin") @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaFin) {
         try {
             Workbook workbook = new XSSFWorkbook();
             Sheet sheet = workbook.createSheet("Pedidos");
@@ -72,16 +77,21 @@ public class ExcelController {
                 }
             }
 
-            // Escribir el archivo
-            FileOutputStream fileOut = new FileOutputStream("p.xlsx");
-            workbook.write(fileOut);
-            fileOut.close();
+
+            // Convertir el workbook a un recurso de ByteArray
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
             workbook.close();
 
-            return ResponseEntity.ok().body("Archivo Excel generado exitosamente!");
+            ByteArrayResource resource = new ByteArrayResource(out.toByteArray());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=pedidos.xlsx")
+                    .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                    .body(resource);
 
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el archivo Excel.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
