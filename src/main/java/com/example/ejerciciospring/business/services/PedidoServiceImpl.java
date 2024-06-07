@@ -5,6 +5,7 @@ import com.example.ejerciciospring.domain.entities.Instrumento;
 import com.example.ejerciciospring.domain.entities.Pedido;
 import com.example.ejerciciospring.repositories.InstrumentoRepository;
 import com.example.ejerciciospring.repositories.PedidoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class PedidoServiceImpl implements IPedidoService{
     IInstrumentoService instrumentoService;
 
     @Override
+    @Transactional
     public Pedido crear(Pedido pedido) {
 
         //Esto solo sirve para actualizar la cantidad vendida del instrumento, no tiene que ver con el pedido

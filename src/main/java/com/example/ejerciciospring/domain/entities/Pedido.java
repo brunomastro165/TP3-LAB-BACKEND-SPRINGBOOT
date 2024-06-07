@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pedido {
+public class  Pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

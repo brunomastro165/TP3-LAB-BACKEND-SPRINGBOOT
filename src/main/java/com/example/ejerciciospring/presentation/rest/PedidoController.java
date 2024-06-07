@@ -4,6 +4,7 @@ import com.example.ejerciciospring.business.services.IInstrumentoService;
 import com.example.ejerciciospring.business.services.IPedidoService;
 import com.example.ejerciciospring.domain.entities.Instrumento;
 import com.example.ejerciciospring.domain.entities.Pedido;
+import com.example.ejerciciospring.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,15 @@ public class PedidoController {
 
     @Autowired
     private IPedidoService pedidoService;
+
+    @Autowired
+    private PedidoRepository pedidoRepository;
+
+    @GetMapping("/group-by-month-year")
+    public ResponseEntity<?> getPedidosGroupedByMonthYear() {
+        List<Object[]> results = pedidoRepository.countPedidosGroupedByMonthYear();
+        return ResponseEntity.ok(results);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<Pedido> getById(@PathVariable Long id){

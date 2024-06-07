@@ -3,6 +3,7 @@ package com.example.ejerciciospring.presentation.rest;
 import com.example.ejerciciospring.business.services.IInstrumentoService;
 import com.example.ejerciciospring.domain.entities.Instrumento;
 import com.example.ejerciciospring.domain.entities.Pedido;
+import com.example.ejerciciospring.repositories.InstrumentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,18 @@ public class InstrumentoController {
     @Autowired
     private IInstrumentoService instrumentoService;
 
+    @Autowired
+    private InstrumentoRepository instrumentoRepository;
+
     @GetMapping("/{id}")
     public ResponseEntity<Instrumento> getById(@PathVariable Long id){
         return ResponseEntity.ok().body(instrumentoService.getById(id));
+    }
+
+    @GetMapping("/group-by-instrument")
+    public ResponseEntity<?> getInstrumentosByCantidad() {
+        List<Object[]> results = instrumentoRepository.countPedidosGroupedByInstrument();
+        return ResponseEntity.ok(results);
     }
 
     @GetMapping("/all")
@@ -40,7 +50,12 @@ public class InstrumentoController {
 
     @PostMapping("/create")
     public ResponseEntity<Instrumento> crear(@RequestBody Instrumento instrumento){
-        return ResponseEntity.ok().body(instrumentoService.crear(instrumento));
+        try {
+            return ResponseEntity.ok().body(instrumentoService.crear(instrumento));
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
     }
 
     @PutMapping("/update")
